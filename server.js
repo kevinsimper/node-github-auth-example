@@ -1,7 +1,13 @@
 import express from "express";
 import fetch from "node-fetch";
+import cookieSession from "cookie-session";
 
 const app = express();
+app.use(
+  cookieSession({
+    secret: process.env.COOKIE_SECRET
+  })
+);
 
 const client_id = process.env.GITHUB_CLIENT_ID;
 const client_secret = process.env.GITHUB_CLIENT_SECRET;
