@@ -54,11 +54,26 @@ app.get("/login/github/callback", (req, res) => {
   const code = req.query.code;
   const access_token = getAccessToken({ code, client_id, client_secret });
   const user = fetchGitHubUser(access_token);
-  if (user.id === 1126497) {
-    res.send("Hello Kevin Simper");
+  if (user) {
+    req.session.access_token = access_token;
+    req.session.githubId = user.id;
   } else {
-    res.send("Not Authorized!");
+    res.send("Login did not succeed!");
   }
+});
+
+app.get("/admin", async (req, res) => {
+  if (req.session && req.session.githubId === 1126497) {
+    res.send("Hello Kevin <pre>" + JSON.stringify(req.session, null, 2));
+    // Possible use "fetchGitHubUser" with the access_token
+  } else {
+    res.redirect("/login/github");
+  }
+});
+
+app.get("/logout", (req, res) => {
+  if (req.session) req.session = null;
+  res.redirect("/");
 });
 
 const PORT = process.env.PORT || 9000;
