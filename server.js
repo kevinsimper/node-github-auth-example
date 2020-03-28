@@ -50,10 +50,10 @@ async function fetchGitHubUser(token) {
   return await request.json();
 }
 
-app.get("/login/github/callback", (req, res) => {
+app.get("/login/github/callback", async (req, res) => {
   const code = req.query.code;
-  const access_token = getAccessToken({ code, client_id, client_secret });
-  const user = fetchGitHubUser(access_token);
+  const access_token = await getAccessToken({ code, client_id, client_secret });
+  const user = await fetchGitHubUser(access_token);
   if (user) {
     req.session.access_token = access_token;
     req.session.githubId = user.id;
