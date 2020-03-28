@@ -57,6 +57,7 @@ app.get("/login/github/callback", async (req, res) => {
   if (user) {
     req.session.access_token = access_token;
     req.session.githubId = user.id;
+    res.redirect("/admin");
   } else {
     res.send("Login did not succeed!");
   }
